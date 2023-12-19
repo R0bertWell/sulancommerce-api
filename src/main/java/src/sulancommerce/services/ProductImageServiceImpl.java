@@ -1,6 +1,16 @@
 package src.sulancommerce.services;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import src.sulancommerce.models.entities.Product;
 import src.sulancommerce.models.entities.ProductImage;
@@ -69,8 +79,9 @@ public class ProductImageServiceImpl implements ProductImageService {
             for (int i = 0; i < files.length; i++) {
                 String prodImageName = "product_"+ obterNomeArquivo(Objects.requireNonNull(files[i].getOriginalFilename())) + "_" + product.getProductId();
                 try {
-                    String imagePath = "images/" + this.storeImage(files[i], prodImageName);
-                    productImages.add(new ProductImage(product, imagePath, mainImage.get(i)));
+                    String imagePathImgur = this.uploadToImgur(files[i], prodImageName);
+                    //String imagePath = "images/" + this.storeImage(files[i], prodImageName);
+                    productImages.add(new ProductImage(product, imagePathImgur, mainImage.get(i)));
                 } catch (Exception ignored){}
             }
 
@@ -78,6 +89,41 @@ public class ProductImageServiceImpl implements ProductImageService {
             //ProductImage productImage = new ProductImage(product, imagePath, mainImage);
             this.productImageRepository.saveAll(productImages);
         }
+    }
+
+    private String uploadToImgur(MultipartFile file, String imageName) throws Exception {
+        String imgurApiUrl = "https://api.imgur.com/3/image/";
+        String imgLink = "";
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Client-ID 1f83eb04ba3b8c7");
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        MultiValueMap<String, Object> formData = new LinkedMultiValueMap<>();
+        ByteArrayResource resource = new ByteArrayResource(file.getBytes()) {
+            @Override
+            public String getFilename() {
+                return file.getOriginalFilename();
+            }
+        };
+
+        formData.add("image", resource);
+        HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(formData, headers);
+
+        try {
+            ResponseEntity<String> responseEntity = restTemplate.postForEntity(imgurApiUrl, requestEntity, String.class);
+
+            String responseBody = responseEntity.getBody();
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode jsonNode = objectMapper.readTree(responseBody);
+
+            imgLink = jsonNode.path("data").path("link").asText();
+
+        } catch (Exception e){
+            throw new Exception(e.getMessage());
+        }
+        return imgLink;
     }
 
     @Override
