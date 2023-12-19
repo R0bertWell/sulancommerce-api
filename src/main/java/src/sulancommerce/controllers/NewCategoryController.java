@@ -9,7 +9,7 @@ import src.sulancommerce.models.dtos.CategoryDTO;
 import src.sulancommerce.services.CategoryService;
 
 @RestController
-@RequestMapping("/categories")
+@RequestMapping("/api/v1/categories")
 public class NewCategoryController {
 
     private final CategoryService categoryService;

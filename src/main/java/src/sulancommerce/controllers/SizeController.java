@@ -10,7 +10,7 @@ import src.sulancommerce.models.dtos.SizeDTO;
 import src.sulancommerce.services.SizeService;
 
 @RestController
-@RequestMapping("/sizes")
+@RequestMapping("/api/v1/sizes")
 public class SizeController {
     private final SizeService sizeService;
 

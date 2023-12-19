@@ -9,7 +9,7 @@ import src.sulancommerce.models.dtos.ColorDTO;
 import src.sulancommerce.services.ColorService;
 
 @RestController
-@RequestMapping("/colors")
+@RequestMapping("/api/v1/colors")
 public class ColorController {
 
     private final ColorService colorService;

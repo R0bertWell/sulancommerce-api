@@ -14,7 +14,7 @@ import src.sulancommerce.services.ProductInfoService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/product-infos/")
+@RequestMapping("/api/v1/product-infos/")
 public class ProductInfosController {
     private final ProductInfoService productInfoService;
 

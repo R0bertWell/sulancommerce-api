@@ -8,7 +8,7 @@ import src.sulancommerce.models.dtos.MercadoPagoDTO;
 @RestController
 public class MercadoPagoController {
 
-    @PostMapping("/process_payment")
+    @PostMapping("/api/v1/process_payment")
     public void processPayment(@RequestBody MercadoPagoDTO paymentReq){
         
     }
