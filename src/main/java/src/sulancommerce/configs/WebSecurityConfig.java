@@ -34,6 +34,8 @@ public class WebSecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable).cors(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((requests) -> requests
                                 .requestMatchers("/authentication", "/sign-up").permitAll()
+                        .requestMatchers("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**").permitAll()
+
                         //.requestMatchers(HttpMethod.GET).permitAll()
                         //.requestMatchers(HttpMethod.POST).authenticated()
                         //.anyRequest().authenticated()

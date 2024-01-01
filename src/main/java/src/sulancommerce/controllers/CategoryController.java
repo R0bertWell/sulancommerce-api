@@ -8,13 +8,15 @@ import org.springframework.web.bind.annotation.*;
 import src.sulancommerce.models.dtos.CategoryDTO;
 import src.sulancommerce.services.CategoryService;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/categories")
-public class NewCategoryController {
+public class CategoryController {
 
     private final CategoryService categoryService;
 
-    public NewCategoryController(CategoryService categoryService) {
+    public CategoryController(CategoryService categoryService) {
         this.categoryService = categoryService;
     }
 
@@ -22,6 +24,12 @@ public class NewCategoryController {
     public ResponseEntity<Page<CategoryDTO>> getCategoriesByFilters(@RequestParam(defaultValue = "") String filter,
                                                                     Pageable pageable) {
         Page<CategoryDTO> categoryDTOs = this.categoryService.getCategoriesPaged(filter, pageable);
+        return new ResponseEntity<>(categoryDTOs, HttpStatus.OK);
+    }
+
+    @GetMapping("category/list")
+    public ResponseEntity<List<CategoryDTO>> getCategoriesByFilters(@RequestParam(defaultValue = "") String filter) {
+        List<CategoryDTO> categoryDTOs = this.categoryService.getCategoriesByFilter(filter);
         return new ResponseEntity<>(categoryDTOs, HttpStatus.OK);
     }
 
