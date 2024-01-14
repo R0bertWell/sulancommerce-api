@@ -20,6 +20,10 @@ public class CartDTO {
     private Date orderDate;
     private BigDecimal totalValue;
     private Boolean payed;
+    private Date payedDate;
+    private Boolean sent;
+    private Date sentDate;
+
     private List<ProductInfoDTO> items;
 
     public CartDTO(Cart cart) {
@@ -28,6 +32,9 @@ public class CartDTO {
         this.orderDate = cart.getOrderDate();
         this.totalValue = cart.getTotalValue();
         this.payed = cart.isPayed();
+        this.sent = cart.isSent();
+        this.sentDate = cart.getSentDate();
+        this.payedDate = cart.getPayedDate();
     }
 
     public Cart toEntity(){
@@ -37,6 +44,9 @@ public class CartDTO {
         cart.setOrderDate(orderDate);
         cart.setTotalValue(totalValue);
         cart.setPayed(payed);
+        cart.setPayedDate(payedDate);
+        cart.setSent(sent);
+        cart.setSentDate(sentDate);
         return cart;
     }
 }
