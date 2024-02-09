@@ -7,10 +7,13 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import src.sulancommerce.models.dtos.UserDTO;
 import src.sulancommerce.models.dtos.auth.AuthenticationRequest;
@@ -21,8 +24,11 @@ import src.sulancommerce.services.jwt.UserDetailsServiceImpl;
 import src.sulancommerce.utils.JwtUtil;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
+@RequestMapping("/api/v1/")
 public class AuthenticationController {
     private final AuthService authService;
     private final AuthenticationManager authenticationManager;
@@ -39,7 +45,7 @@ public class AuthenticationController {
         this.jwtUtil = jwtUtil;
     }
 
-    @PostMapping("/authentication")
+    @PostMapping("authentication")
     public AuthenticationResponse createAuthToken(@RequestBody AuthenticationRequest authenticationRequest,
                                                   HttpServletResponse response) throws BadCredentialsException, DisabledException, UsernameNotFoundException, IOException {
         String username = authenticationRequest.getUsername();
@@ -54,14 +60,19 @@ public class AuthenticationController {
 
         final UserDetails userDetails = userDetailsService.loadUserByUsername(username);
         final String jwt = jwtUtil.generateToken(userDetails.getUsername());
-        return new AuthenticationResponse(jwt, username);
+        List<GrantedAuthority> authorities = new ArrayList<>(userDetails.getAuthorities());
+        //authorities.add(new SimpleGrantedAuthority("USER_ROLE"));
+        //authorities.add(new SimpleGrantedAuthority("ADMIN_ROLE"));
+        return new AuthenticationResponse(jwt, username, authorities);
     }
 
-    @PostMapping("/sign-up")
+    @PostMapping("sign-up")
     public ResponseEntity<?> createUser(@RequestBody SignupRequest signupRequest){
         UserDTO createUser = authService.createUser(signupRequest);
         if(createUser == null)
-            return new ResponseEntity<>("User is not created, try again later.", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Username already in use.", HttpStatus.BAD_REQUEST);
+
+        //return new ResponseEntity<>("User is not created, try again later.", HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>(createUser, HttpStatus.CREATED);
     }
 }

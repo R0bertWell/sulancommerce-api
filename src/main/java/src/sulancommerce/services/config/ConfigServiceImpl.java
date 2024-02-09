@@ -26,7 +26,7 @@ public class ConfigServiceImpl implements ConfigService{
 
     @Override
     public ConfigDTO updateConfig(ConfigDTO configDTO) throws Exception {
-        Optional<Config> configOptional = this.configRepository.findById(1L);
+        Optional<Config> configOptional = this.configRepository.findById(configDTO.getConfigId());
 
         if(configOptional.isEmpty()){
             throw new Exception("Não existe configuração!");

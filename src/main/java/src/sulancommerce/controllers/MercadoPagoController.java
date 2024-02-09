@@ -25,7 +25,7 @@ public class MercadoPagoController {
         return new ResponseEntity<>(json, HttpStatus.OK);
     }
 
-    private void teste(){
+    /*private void teste(){
         MercadoPago.SDK.setAccessToken("YOUR_ACCESS_TOKEN");
 
 
@@ -55,5 +55,5 @@ public class MercadoPagoController {
 
         System.out.println(payment.getStatus());
 
-    }
+    }*/
 }

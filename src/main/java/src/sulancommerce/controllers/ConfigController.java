@@ -33,7 +33,7 @@ public class ConfigController {
         return new ResponseEntity<>(config, HttpStatus.OK);
     }
 
-    @PutMapping("update")
+    @PutMapping("general-config/update")
     public ResponseEntity<ConfigDTO> editConfig(@RequestBody ConfigDTO config) throws Exception {
         ConfigDTO configDTO = this.configService.updateConfig(config);
         return new ResponseEntity<>(configDTO, HttpStatus.OK);

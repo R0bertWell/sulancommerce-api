@@ -1,4 +1,4 @@
-package src.sulancommerce.models.entities;
+package src.sulancommerce.models.entities.auth;
 
 import jakarta.persistence.*;
 import lombok.Data;
